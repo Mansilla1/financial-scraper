@@ -14,7 +14,7 @@ services:
       - 8000:8000
     volumes:
       - .:/app
-    # command: bash -c "python manage.py runserver 0.0.0.0:8000"
+    command: bash -c "python manage.py runserver 0.0.0.0:8000"
     tty: true
     depends_on:
       - db
