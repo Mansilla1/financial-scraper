@@ -1,0 +1,20 @@
+version: '3'
+services:
+  db:
+    build: ./docker/db
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./docker/db/data:/var/lib/postgresql/data
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 8000:8000
+    volumes:
+      - .:/app
+    # command: bash -c "python manage.py runserver 0.0.0.0:8000"
+    tty: true
+    depends_on:
+      - db
