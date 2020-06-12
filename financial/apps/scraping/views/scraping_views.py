@@ -13,7 +13,7 @@ class ScrapingViews(APIView):
 
         try:
             result = scraping_services.get_nemos()
-            status_code = status.HTTP_200_OK
+            status_code = status.HTTP_200_OK if result else status.HTTP_404_NOT_FOUND
         except InvalidResponse:
             result = {'error': 'No se puede establecer conexión'}
             status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
