@@ -19,5 +19,8 @@ props = {
         'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.122 Safari/537.36',
         # 'X-CSRF-Token': 'lzN0ykSE-zU-dYStFUocaGAp-KbeF3HtzndQ',
     },
-    'nemo_uri': 'api/RV_ResumenMercado/getAccionesPrecios',
+    'uri': {
+        'csrf': 'api/Securities/csrfToken',
+        'nemos': 'api/RV_ResumenMercado/getAccionesPrecios',
+    },
 }
