@@ -1,6 +1,6 @@
-from .scraping_views import ScrapingViews
+from .scraping_views import ScrapingView
 
 
 __all__ = [
-    'ScrapingViews',
+    'ScrapingView',
 ]

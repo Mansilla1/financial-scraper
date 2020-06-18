@@ -6,7 +6,7 @@ from financial.apps.scraping.exceptions import InvalidResponse
 from financial.apps.scraping.services import ScrapingServices
 
 
-class ScrapingViews(APIView):
+class ScrapingView(APIView):
 
     def get(self, request):
         scraping_services = ScrapingServices()

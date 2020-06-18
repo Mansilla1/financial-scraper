@@ -4,3 +4,5 @@ __pycache__/
 *.env
 static/
 docker/db/data/
+
+.DS_Store

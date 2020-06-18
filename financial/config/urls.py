@@ -24,4 +24,8 @@ urlpatterns = [
         'api/v1/scraping/',
         include('financial.apps.scraping.urls'),
     ),
+    path(
+        'api/v1/',
+        include('financial.apps.base.urls'),
+    ),
 ]

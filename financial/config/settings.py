@@ -41,6 +41,7 @@ SYSTEM_APPS = [
 ]
 
 PROJECT_APPS = [
+    'financial.apps.base.apps.BaseConfig',
     'financial.apps.scraping.apps.ScrapingConfig',
 ]
 
