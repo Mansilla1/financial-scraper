@@ -11,7 +11,7 @@ from .properties import (
     props,
     URL_BASE,
 )
-
+from financial.apps.scraping.models import NemotechModel
 
 class ScrapingServices:
 
@@ -36,7 +36,7 @@ class ScrapingServices:
 
         return csrf_token
 
-    def get_nemos(self):
+    def get_nemos(self, save=False):
         uris = props['uri']
         nemos = uris['nemos']
 
@@ -67,5 +67,13 @@ class ScrapingServices:
             ]
         except (JSONDecodeError, KeyError):
             result = []
-
+        if save:
+            self.save_nemos(result)
         return result
+
+    def save_nemos(self, nemos):
+        nemos_object = [
+            NemotechModel(**nemo)
+            for nemo in nemos
+        ]
+        NemotechModel.objects.bulk_create(nemos_object)
