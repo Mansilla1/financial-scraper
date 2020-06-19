@@ -23,4 +23,21 @@ props = {
         'csrf': 'api/Securities/csrfToken',
         'nemos': 'api/RV_ResumenMercado/getAccionesPrecios',
     },
+    'mapping_values': {
+        'nemos': {
+            'BONO_VERDE': 'green_bonus',
+            'DJSI': 'djsi',
+            'ISIN': 'etfs_foreign',
+            'MONEDA': 'isin',
+            'MONTO': 'coin',
+            'NEMO': 'amount',
+            'PESO': 'nemo',
+            'PRECIO_CIERRE': 'weight',
+            'PRECIO_COMPRA': 'close_price',
+            'PRECIO_VENTA': 'buy_price',
+            'UN_TRANSADAS': 'sell_price',
+            'VALORES_EXTRANJEROS': 'traded_units',
+            'VARIACION': 'variant',
+        },
+    },
 }

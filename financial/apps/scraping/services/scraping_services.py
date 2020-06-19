@@ -54,10 +54,17 @@ class ScrapingServices:
             raise InvalidResponse
 
         try:
-            json_result = response.json()
-            result = {
-                'nemos': json_result['listaResult'],
-            }
+            mapped_keys = props['mapping_values']['nemos']
+            json_result = response.json()['listaResult']
+
+            result = [
+                {
+                    mapped_keys[_key]: _value
+                    for _key, _value in _result.items()
+                    if _key in mapped_keys.keys()
+                }
+                for _result in json_result
+            ]
         except (JSONDecodeError, KeyError):
             result = []
 
