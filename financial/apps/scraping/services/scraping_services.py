@@ -77,3 +77,21 @@ class ScrapingServices:
             for nemo in nemos
         ]
         NemotechModel.objects.bulk_create(nemos_object)
+    
+    def details_by_nemo(self):
+        uris = props['uri']
+        resume_price_url = uris['get_resumen_precios']
+
+
+        headers = deepcopy(props['headers'])
+        headers['X-CSRF-Token'] = self._get_csrf_token()
+        response = self._session.post(
+            url=f'{URL_BASE}{resume_price_url}',
+            headers=headers,
+            json={"nemo": "LTM"}, # Replace LTM with any nemo
+            verify=False,
+        )
+        json_result = response.json()['listaResult']
+        data_type = [result["tipo_dato"] for result in json_result] # List (data type)
+        descriptions = [result["descripcion"] for result in json_result] # List descriptions
+        import pdb; pdb.set_trace()

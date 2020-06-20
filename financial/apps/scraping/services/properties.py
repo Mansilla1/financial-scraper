@@ -22,6 +22,7 @@ props = {
     'uri': {
         'csrf': 'api/Securities/csrfToken',
         'nemos': 'api/RV_ResumenMercado/getAccionesPrecios',
+        'get_resumen_precios': 'api/RV_Instrumentos/getResumenPrecios'
     },
     'mapping_values': {
         'nemos': {
