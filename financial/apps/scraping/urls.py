@@ -7,8 +7,13 @@ app_name = 'scraping'
 
 urlpatterns = [
     path(
-        'initial/',
+        'nemos/',
         views.ScrapingView.as_view(),
-        name='initial',
+        name='nemos',
+    ),
+    path(
+        'details_by_nemo/',
+        views.ScrapingView.as_view(),
+        name='details_by_nemo',
     ),
 ]

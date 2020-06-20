@@ -25,3 +25,7 @@ class ScrapingView(APIView):
             data=result,
             status=status_code,
         )
+
+    def get(self, request):
+        scraping_services = ScrapingServices()
+        scraping_services.details_by_nemo()
