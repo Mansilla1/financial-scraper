@@ -15,3 +15,6 @@ class NemotechModel(models.Model):
     sell_price = models.FloatField(null=True)
     traded_units = models.FloatField(null=True)
     variant = models.FloatField(null=True)
+
+    class Meta:
+        db_table = 'nemo_tech'

@@ -1,8 +1,11 @@
 idea/
+.idea/
 *.pyc
 __pycache__/
 *.env
+venv/
 static/
 docker/db/data/
 
 .DS_Store
+
