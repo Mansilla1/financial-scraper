@@ -13,6 +13,7 @@ from .properties import (
 )
 from financial.apps.scraping.models import NemotechModel
 
+
 class ScrapingServices:
 
     def __init__(self):

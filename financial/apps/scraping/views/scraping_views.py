@@ -6,6 +6,7 @@ from financial.apps.scraping.exceptions import InvalidResponse
 from financial.apps.scraping.services import ScrapingServices
 from financial.apps.scraping.serializers import ScrapingSerializer
 
+
 class ScrapingView(APIView):
 
     def post(self, request):
