@@ -1,5 +1,7 @@
 from django.db import models
 
+from financial.apps.scraping.managers import NemotechManager
+
 
 class NemotechModel(models.Model):
     ACTIVE = 'active'
@@ -29,6 +31,7 @@ class NemotechModel(models.Model):
         max_length=25,
         choices=STATUS_CHOICES,
         null=False,
+        default=ACTIVE,
         help_text=(
             'It maintains the information in case of changes, '
             'the one that remains "active" will be the updated one.'
@@ -36,6 +39,8 @@ class NemotechModel(models.Model):
     )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    objects = NemotechManager()
 
     class Meta:
         db_table = 'nemo_tech'

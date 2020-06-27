@@ -6,6 +6,14 @@ services:
       - 5434:5432
     volumes:
       - ./docker/db/data:/var/lib/postgresql/data
+
+  db_test:
+    build:
+      context: .
+      dockerfile: docker/tests/Dockerfile
+    ports:
+      - 5435:5432
+
   api:
     build:
       context: .
@@ -14,7 +22,18 @@ services:
       - 8000:8000
     volumes:
       - .:/app
-    command: bash -c "python manage.py runserver 0.0.0.0:8000"
+    command: bash -c "python manage.py migrate; python manage.py runserver 0.0.0.0:8000"
     tty: true
     depends_on:
       - db
+
+  testing:
+    depends_on:
+      - db_test
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/app
+    tty: true
+    command: bash -c "pytest -s"
