@@ -11,7 +11,7 @@ class NemotechManager(Manager):
         assert all(x is not None for x in nemo_names)
 
         nemo_tech_list = self.filter(
-            name=nemo_names,
+            nemo=nemo_names,
             status=models.NemotechModel.ACTIVE,
         ).values()
         insert_data = []
@@ -27,6 +27,12 @@ class NemotechManager(Manager):
             )
 
             if _nemo_obj:
+                _nemo_compare = _nemo_obj.copy()
+                del _nemo_compare['id']
+
+                if _nemo_compare == _nemo:
+                    continue
+
                 update_ids.append(_nemo_obj['id'])
 
             data_to_insert = {
@@ -41,4 +47,4 @@ class NemotechManager(Manager):
             status=models.NemotechModel.INACTIVE,
         )
 
-        self.bulk_insert(insert_data)
+        self.bulk_create(insert_data)
