@@ -28,7 +28,7 @@ El proyecto tiene como objetivo poder obtener información de [la bolsa de santi
 
 ## Pasos a ejecutar
 
-Una vez clonado el repositorio, dentro del **directorio raíz** del proyecto, ejecutar el comando `docker-compose up`. Esto lo que hará, será levantar los contenedores correspondientes y los dejará listos para su ejecución.
+Una vez clonado el repositorio, dentro del **directorio raíz** del proyecto, ejecutar el comando `docker-compose up api`. Esto lo que hará, será levantar los contenedores correspondientes y los dejará listos para su ejecución.
 
 Por defecto la versión de la api se levanta en el puerto `8000` y la base de datos en el puerto `5434` (todo esto es configurable y se verá más adelante).
 
@@ -84,3 +84,14 @@ docker-compose exec api bash
 ```
 
 Consideración: `api` corresponde al identificador de la imagen levantada con python, si se cambian los nombres o se agregan nuevos, se debe acceder por ese identificador (del ejemplo, si queremos acceder al contenedor de la base de datos, sería con `docker-compose exec db bash`).
+
+
+# Testing
+
+Dentro del proyecto se agregó un contenedor que es sólo para pruebas locales. Esto se hizo para no interrumpir el desarrollo local y tener un contenedor sólo para pruebas (esto es temporal, a mejorará a medida que el proyecto vaya escalando).
+
+El contenedor `testing` levanta su versión de la `api` junto con su base de datos y estructura, por lo que es independiente.
+
+## ¿Cómo se levanta?
+
+Con el comando `docker-compose up testing` levantaremos el contenedor de pruebas junto con su base de datos, y automáticamente ejecutará las pruebas de `pytest`.

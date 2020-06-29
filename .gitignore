@@ -1,8 +1,22 @@
+# IDE
 idea/
-*.pyc
-__pycache__/
-*.env
+.idea/
+venv/
+
+# Django
 static/
+*.env
+__pycache__/
+*.pyc
+
+# Docker
 docker/db/data/
 
+# Mac
 .DS_Store
+
+# Unit test / coverage reports
+.pytest_cache/
+.cache
+.tox/
+.coverage

@@ -2,6 +2,7 @@ import requests
 
 from copy import deepcopy
 from json.decoder import JSONDecodeError
+from typing import List
 
 from financial.apps.scraping.exceptions import (
     InvalidCSRFToken,
@@ -13,12 +14,17 @@ from .properties import (
 )
 from financial.apps.scraping.models import NemotechModel
 
+
 class ScrapingServices:
 
     def __init__(self):
         self._session = requests.Session()
 
-    def _get_csrf_token(self):
+    def _get_csrf_token(self) -> str:
+        """
+        Get csrf token of base url page
+        :return: string
+        """
         csrf_url = props['uri']['csrf']
 
         try:
@@ -36,7 +42,12 @@ class ScrapingServices:
 
         return csrf_token
 
-    def get_nemos(self, save=False):
+    def get_nemos(self, save=False) -> List[dict]:
+        """
+        Scraping nemos of page and save it in database
+        :param save: boolean, default False
+        :return result: list of dictionaries
+        """
         uris = props['uri']
         nemos = uris['nemos']
 
@@ -46,7 +57,6 @@ class ScrapingServices:
         response = self._session.post(
             url=f'{URL_BASE}{nemos}',
             headers=headers,
-            json={},
             verify=False,
         )
 
@@ -67,13 +77,8 @@ class ScrapingServices:
             ]
         except (JSONDecodeError, KeyError):
             result = []
-        if save:
-            self.save_nemos(result)
-        return result
 
-    def save_nemos(self, nemos):
-        nemos_object = [
-            NemotechModel(**nemo)
-            for nemo in nemos
-        ]
-        NemotechModel.objects.bulk_create(nemos_object)
+        if save and result:
+            NemotechModel.objects.bulk_insert(result)
+
+        return result
