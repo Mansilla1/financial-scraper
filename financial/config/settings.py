@@ -41,8 +41,12 @@ SYSTEM_APPS = [
 ]
 
 PROJECT_APPS = [
+    'financial.apps.assets.apps.AssetsConfig',
     'financial.apps.base.apps.BaseConfig',
-    'financial.apps.scraping.apps.ScrapingConfig',
+    'financial.apps.currency.apps.CurrencyConfig',
+    'financial.apps.geo.apps.GeoConfig',
+    'financial.apps.utils.apps.UtilsConfig',
+    'financial.apps.web_scraping.apps.WebScrapingConfig',
 ]
 
 INSTALLED_APPS = [*SYSTEM_APPS, *PROJECT_APPS]
@@ -89,6 +93,8 @@ DATABASES = {
         'USER': 'postgres',
         'PASSWORD': 'financial',
         'PORT': 5432,
+        # 'OPTIONS': {},
+        # 'CONN_MAX_AGE': 0,
     },
 }
 
