@@ -16,4 +16,9 @@ urlpatterns = [
         views.ScrapeAssets.as_view(),
         name="web-scraping",
     ),
+    path(
+        "web-scraping/historical-prices/",
+        views.ScrapeHistoricalAssetsPrices.as_view(),
+        name="web-scraping-historical-prices",
+    ),
 ]

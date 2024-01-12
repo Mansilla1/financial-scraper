@@ -14,6 +14,11 @@ class Asset(UUIDBaseModel):
 
 class AssetPrice(UUIDBaseModel):
     asset = models.ForeignKey("assets.Asset", on_delete=models.DO_NOTHING, null=False)
-    price = models.FloatField(null=True)
+    close = models.FloatField(null=True)
+    adj_close = models.FloatField(null=True)
+    high = models.FloatField(null=True)
+    low = models.FloatField(null=True)
+    open = models.FloatField(null=True)
+    volume = models.IntegerField(null=True)
     date = models.DateField(null=True)
     time = models.TimeField(null=True)

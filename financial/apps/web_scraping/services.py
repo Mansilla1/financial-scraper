@@ -2,7 +2,7 @@ import requests
 
 from copy import deepcopy
 from json.decoder import JSONDecodeError
-from typing import List
+from typing import Dict, List
 
 from financial.apps.assets import dataclasses as assets_dataclasses
 from financial.apps.assets import services as assets_services
@@ -10,7 +10,7 @@ from financial.apps.web_scraping.exceptions import (
     InvalidCSRFToken,
     InvalidResponse,
 )
-from financial.apps.web_scraping.dataclasses import GetNemoPriceResponseData
+from financial.apps.web_scraping.dataclasses import GetNemoPriceResponseData, HistoricalNemoPriceResponseData
 
 
 class BolsaDeSantiagoWebScraping:
@@ -18,6 +18,7 @@ class BolsaDeSantiagoWebScraping:
     _ENDPOINT = {
         "csrf": "/api/Securities/csrfToken",
         "get_prices_nemos": "/api/RV_ResumenMercado/getAccionesPrecios",
+        "get_historical_prices": "/api/RV_Instrumentos/getPointHistGAT",
     }
     _HEADERS = {
         "Accept": "application/json, text/plain, */*",
@@ -103,6 +104,41 @@ class BolsaDeSantiagoWebScraping:
 
         return nemo_data_list
 
+    def get_historical_prices_by_nemo(self, nemo: str) -> List[dict]:
+        url = f"{self._URL_BASE}{self._ENDPOINT['get_historical_prices']}"
+        headers = deepcopy(self._HEADERS)
+        headers["X-CSRF-Token"] = self._get_csrf_token()
+        try:
+            response = self._session.get(
+                url=url,
+                headers=headers,
+                params={"nemo": nemo},
+                verify=True,
+            )
+            if not response.ok:
+                raise InvalidResponse
+
+            json_result = response.json().get("listaResult")
+            if not json_result:
+                return []
+
+            historical_prices = [
+                HistoricalNemoPriceResponseData(
+                    adj_close=response.get("ADJ_CLOSE"),
+                    close=response.get("CLOSE"),
+                    date=response.get("DATE"),
+                    high=response.get("HIGH"),
+                    low=response.get("LOW"),
+                    open=response.get("OPEN"),
+                    volume=response.get("VOLUME"),
+                )
+                for response in json_result
+            ]
+            return historical_prices
+        except requests.exceptions.Timeout as e:
+            print("Timeout error", e)
+            return []
+
     def save_nemos(self, nemos_price_data: List[GetNemoPriceResponseData]) -> None:
         for asset_data in nemos_price_data:
             try:
@@ -115,3 +151,29 @@ class BolsaDeSantiagoWebScraping:
             except Exception as e:
                 # import pdb; pdb.set_trace()
                 pass
+
+    def save_nemos_historical_prices(self, nemos_price_data: Dict[str, List[HistoricalNemoPriceResponseData]]) -> None:
+        for nemo, prices_data in nemos_price_data.items():
+            asset_data = assets_services.get_asset_data_by_ticker(ticker=nemo)
+            if not asset_data:
+                self.save_nemos(nemos_price_data=[nemo])
+                asset_data = assets_services.get_asset_data_by_ticker(ticker=nemo)
+
+            if not asset_data:
+                continue
+            try:
+                assets_price_data = [
+                    assets_dataclasses.AssetPriceData(
+                        asset=asset_data,
+                        adj_close=price_data.adj_close,
+                        close=price_data.close,
+                        date=price_data.date,
+                        high=price_data.high,
+                    )
+                    for price_data in prices_data
+                ]
+                assets_services.asset_prices_bulk_creation(asset_prices_data=assets_price_data)
+            except Exception as e:
+                # import pdb; pdb.set_trace()
+                pass
+

@@ -50,3 +50,36 @@ class GetNemoPriceResponseData:
             'traded_units': self.traded_units,
             'variant': self.variant,
         }
+
+
+@dataclass
+class HistoricalNemoPriceResponseData:
+    adj_close: float
+    close: float
+    date: str
+    high: float
+    low: float
+    open: float
+    volume: int
+
+    def serialize(self):
+        return {
+            'adj_close': self.adj_close,
+            'close': self.close,
+            'date': self.date,
+            'high': self.high,
+            'low': self.low,
+            'open': self.open,
+            'volume': self.volume,
+        }
+
+    def raw_serialize(self):
+        return {
+            'ADJ_CLOSE': self.adj_close,
+            'CLOSE': self.close,
+            'DATE': self.date,
+            'HIGH': self.high,
+            'LOW': self.low,
+            'OPEN': self.open,
+            'VOLUME': self.volume,
+        }
