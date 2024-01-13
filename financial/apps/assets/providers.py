@@ -1,4 +1,6 @@
-from typing import List
+import arrow
+
+from typing import List, Tuple
 
 from financial.apps.assets.exceptions import AssetDoesNotExist
 from financial.apps.assets.models import Asset, AssetPrice
@@ -28,7 +30,7 @@ def create_new_asset(asset_data: Asset) -> Asset:
 def asset_prices_bulk_creation(asset_prices_data: List[AssetPrice]) -> None:
     asset_prices = [
         AssetPrice(
-            asset=asset_price_data.asset,
+            asset_id=asset_price_data.asset.uuid,
             close=asset_price_data.close,
             adj_close=asset_price_data.adj_close,
             high=asset_price_data.high,
@@ -43,5 +45,9 @@ def asset_prices_bulk_creation(asset_prices_data: List[AssetPrice]) -> None:
     AssetPrice.objects.bulk_create(asset_prices)
 
 
-def get_assets_prices_by_ids(assets_ids: List[str]) -> List[AssetPrice]:
-    return AssetPrice.objects.filter(asset_id__in=assets_ids)
+def get_assets_prices_by_nemos_and_date_range(nemos: List[str], date_range: Tuple[arrow.Arrow, arrow.Arrow]) -> List[AssetPrice]:
+    return AssetPrice.objects.select_related("asset").filter(
+        asset__ticker__in=nemos,
+        date__gte=date_range[0].date(),
+        date__lte=date_range[1].date(),
+    )

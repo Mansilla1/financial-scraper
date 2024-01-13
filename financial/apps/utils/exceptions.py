@@ -1,0 +1,2 @@
+class InvalidRangeString(Exception):
+    pass

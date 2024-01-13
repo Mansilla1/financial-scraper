@@ -12,6 +12,11 @@ urlpatterns = [
         name="initial",
     ),
     path(
+        "historical-prices/",
+        views.AssetsHistoricalPricesView.as_view(),
+        name="historical-prices",
+    ),
+    path(
         "web-scraping/",
         views.ScrapeAssets.as_view(),
         name="web-scraping",

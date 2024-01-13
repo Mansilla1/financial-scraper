@@ -1,3 +1,4 @@
+import logging
 import requests
 
 from copy import deepcopy
@@ -11,6 +12,9 @@ from financial.apps.web_scraping.exceptions import (
     InvalidResponse,
 )
 from financial.apps.web_scraping.dataclasses import GetNemoPriceResponseData, HistoricalNemoPriceResponseData
+
+
+logger = logging.getLogger(__name__)
 
 
 class BolsaDeSantiagoWebScraping:
@@ -136,7 +140,7 @@ class BolsaDeSantiagoWebScraping:
             ]
             return historical_prices
         except requests.exceptions.Timeout as e:
-            print("Timeout error", e)
+            logger.warning(f"Timeout error {e}")
             return []
 
     def save_nemos(self, nemos_price_data: List[GetNemoPriceResponseData]) -> None:
@@ -149,8 +153,7 @@ class BolsaDeSantiagoWebScraping:
                 )
                 assets_services.create_new_asset(asset_data=asset_data)
             except Exception as e:
-                # import pdb; pdb.set_trace()
-                pass
+                logger.error(e)
 
     def save_nemos_historical_prices(self, nemos_price_data: Dict[str, List[HistoricalNemoPriceResponseData]]) -> None:
         for nemo, prices_data in nemos_price_data.items():
@@ -174,6 +177,4 @@ class BolsaDeSantiagoWebScraping:
                 ]
                 assets_services.asset_prices_bulk_creation(asset_prices_data=assets_price_data)
             except Exception as e:
-                # import pdb; pdb.set_trace()
-                pass
-
+                logger.error(e)

@@ -1,8 +1,11 @@
+import arrow
+
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from financial.apps.assets import services
+from financial.apps.utils.constants import PRICES_DATE_RANGE_FORMAT_STRING
 
 
 class AssetsView(APIView):
@@ -31,15 +34,41 @@ class AssetsHistoricalPricesView(APIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        nemos = list(map(lambda x: x.strip(), nemos_param.split(",")))
-        result = services.get_assets_prices_data_by_assets_ids(assets_ids=nemos)
+        range_param = PRICES_DATE_RANGE_FORMAT_STRING.get(params.get("range"))
+        if not range_param:
+            return Response(
+                data=[],
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
-        status_code = status_code = status.HTTP_200_OK if result else status.HTTP_404_NOT_FOUND
+        nemos = list(map(lambda x: x.strip(), nemos_param.split(",")))
+        nemos_prices = services.get_assets_prices_data_by_nemos(nemos=nemos, range_string=range_param, until_date=arrow.now())
+
+        status_code = status_code = status.HTTP_200_OK if nemos_prices else status.HTTP_404_NOT_FOUND
+        result = {}
+        allowed_historical_prices_fields = [
+            "adj_close",
+            "close",
+            "date",
+            "high",
+            "low",
+            "open",
+            "volume",
+        ]
+        for nemo_price in nemos_prices:
+            nemo = nemo_price.get("nemo")
+            historical_prices = []
+            for historical_price in nemo_price.get("historical_prices") or []:
+                data_ = historical_price.serialize()
+                historical_prices.append({
+                    k: v
+                    for k, v in data_.items()
+                    if k in allowed_historical_prices_fields
+                })
+            result[nemo] = historical_prices
+
         return Response(
-            data=[
-                d.serialize()
-                for d in result
-            ],
+            data=result,
             status=status_code,
         )
 

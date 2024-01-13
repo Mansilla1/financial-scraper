@@ -32,7 +32,9 @@ class AssetData:
 
 @dataclass
 class AssetPriceData:
-    asset: AssetData
+    asset: Optional[AssetData] = None
+    asset_name: Optional[str] = None
+    uuid: Optional[str] = None
     close: Optional[float] = None
     adj_close: Optional[float] = None
     high: Optional[float] = None
@@ -43,9 +45,11 @@ class AssetPriceData:
     time: Optional[Union[arrow.Arrow, str]] = None
     created_at: Optional[Union[arrow.Arrow, str]] = None
     updated_at: Optional[Union[arrow.Arrow, str]] = None
+    asset_uuid: Optional[str] = None
 
     def serialize(self):
         return {
+            "asset_name": self.asset.name,
             "asset": self.asset.serialize(),
             "close": self.close,
             "adj_close": self.adj_close,
@@ -57,4 +61,6 @@ class AssetPriceData:
             "time": str(self.time) if self.time else None,
             "created_at": str(self.created_at) if self.created_at else None,
             "updated_at": str(self.updated_at) if self.updated_at else None,
+            "asset_uuid": self.asset_uuid,
+            "uuid": self.uuid,
         }
