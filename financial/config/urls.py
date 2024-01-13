@@ -20,8 +20,8 @@ from django.urls import (
 
 urlpatterns = [
     path(
-        'api/v1/scraping/',
-        include('financial.apps.scraping.urls'),
+        'api/v1/assets/',
+        include('financial.apps.assets.urls'),
     ),
     path(
         'api/v1/',

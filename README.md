@@ -9,7 +9,6 @@ El proyecto tiene como objetivo poder obtener información de [la bolsa de santi
 * [Python](https://www.python.org/): Como lenguaje de programación.
 * [Django](https://www.djangoproject.com/): Como framework web para agilizar el desarrollo de apis.
 * [GIT](https://git-scm.com/): Como herramienta de versionamiento.
-* [Hubflow](https://datasift.github.io/gitflow/): Para el manejo de ramas de GIT de manera ordenada (recomendado).
 * [PostgreSQL](https://www.postgresql.org/): Como base de datos para almacenar procesos y demases (si se preguntan porqué `postgreSQL`, simplemente es porque me gusta).
 
 ## Extras
@@ -28,16 +27,18 @@ El proyecto tiene como objetivo poder obtener información de [la bolsa de santi
 
 ## Pasos a ejecutar
 
-Una vez clonado el repositorio, dentro del **directorio raíz** del proyecto, ejecutar el comando `docker-compose up`. Esto lo que hará, será levantar los contenedores correspondientes y los dejará listos para su ejecución.
+Una vez clonado el repositorio, dentro del **directorio raíz** del proyecto, ejecutar el comando `make up`. Esto lo que hará, será levantar los contenedores correspondientes y los dejará listos para su ejecución.
 
-Por defecto la versión de la api se levanta en el puerto `8000` y la base de datos en el puerto `5434` (todo esto es configurable y se verá más adelante).
+Por defecto la versión de la api se levanta en el puerto `8085` y la base de datos en el puerto `5434` (todo esto es configurable y se verá más adelante).
+
+Una vez finalizado el comando `make up` te hará entrar al contenedor docker. Para poder levantar el proyecto django, lo puedes hacer con el comando `dev up`.
 
 ### Probar la ejecución
 
 Se implementó un endpoint que sirve para verificar que el proyecto esté levantado (un `health_check`). La siguiente petición cUrl debería retornar un `{"status": true}`:
 
 ```shell
-curl --location --request GET 'http://localhost:8000/api/v1/health-check/'
+curl --location --request GET 'http://localhost:8085/api/v1/health-check/'
 ```
 
 Con esto ok, podemos comenzar con los desarrollos nuevos :rocket:.
@@ -62,10 +63,9 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - 8000:8000
+      - 8085:8085
     volumes:
       - .:/app
-    # command: bash -c "python manage.py runserver 0.0.0.0:8000"
     tty: true
     depends_on:
       - db
@@ -74,13 +74,3 @@ services:
 Como se puede ver, hay una línea comentada, esto lo que hace es que no se ejecute django al iniciar el contenedor, esto es para que dentro de la imagen, nosotros lo ejecutemos y podamos debugear a gusto.
 
 Los puertos se pueden cambiar por los que guste, **considerar que el primero es el puerto que se ve reflejado en el computador local**.
-
-### Acceder al contenedor
-
-Una vez que los contenedores estén levantados, se puede acceder a estos con el siguiente comando (dentro del directorio raíz del proyecto):
-
-```shell
-docker-compose exec api bash
-```
-
-Consideración: `api` corresponde al identificador de la imagen levantada con python, si se cambian los nombres o se agregan nuevos, se debe acceder por ese identificador (del ejemplo, si queremos acceder al contenedor de la base de datos, sería con `docker-compose exec db bash`).

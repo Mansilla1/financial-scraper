@@ -3,6 +3,6 @@ idea/
 __pycache__/
 *.env
 static/
-docker/db/data/
+.docker/db/data/
 
 .DS_Store
