@@ -83,3 +83,9 @@ Para ello, se debe ejecutar
 ```shell
 curl --location 'http://localhost:8085/api/v1/assets/web-scraping/historical-prices?nemos=<nemolist;split-by-colon>'
 ```
+
+## Obtener los dividendos (bolsa de santiago)
+Para ello, se debe ejecutar
+```shell
+curl --location 'http://localhost:8085/api/v1/assets/web-scraping/dividends?nemos=<nemolist;split-by-colon>&start_date=YYYY-MM-DD&end_date=YYYY-MM-DD'
+```
