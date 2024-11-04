@@ -74,3 +74,12 @@ services:
 Como se puede ver, hay una línea comentada, esto lo que hace es que no se ejecute django al iniciar el contenedor, esto es para que dentro de la imagen, nosotros lo ejecutemos y podamos debugear a gusto.
 
 Los puertos se pueden cambiar por los que guste, **considerar que el primero es el puerto que se ve reflejado en el computador local**.
+
+
+# Endpoints
+
+## Obtener precios históricos de un asset
+Para ello, se debe ejecutar
+```shell
+curl --location 'http://localhost:8085/api/v1/assets/web-scraping/historical-prices?nemos=<nemolist;split-by-colon>'
+```
