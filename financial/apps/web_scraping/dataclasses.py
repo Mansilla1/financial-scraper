@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import List, Optional, Union
 
 
 @dataclass
@@ -16,6 +17,7 @@ class GetNemoPriceResponseData:
     sell_price: str
     traded_units: str
     variant: str
+    minute: Optional[str] = None
 
     def raw_serialize(self):
         return {
@@ -83,3 +85,10 @@ class HistoricalNemoPriceResponseData:
             'OPEN': self.open,
             'VOLUME': self.volume,
         }
+
+
+@dataclass
+class ResultMapDataForNemoData:
+    nemo: str
+    range: str
+    data: List[Union[HistoricalNemoPriceResponseData, GetNemoPriceResponseData]]

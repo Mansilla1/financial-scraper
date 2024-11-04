@@ -37,7 +37,7 @@ class AssetsHistoricalPricesView(APIView):
         range_param = PRICES_DATE_RANGE_FORMAT_STRING.get(params.get("range"))
         if not range_param:
             return Response(
-                data=[],
+                data={},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
@@ -122,5 +122,39 @@ class ScrapeHistoricalAssetsPrices(APIView):
                 }
                 for nemo, historical_prices in data.items()
             ],
+            status=status.HTTP_200_OK,
+        )
+
+
+class ScrapeAssetsDividends(APIView):
+    def get(self, request, *args, **kwargs):
+        from financial.apps.web_scraping import services as web_scraping_services
+        params = request.query_params
+        nemos_param = params.get("nemos")
+        if not nemos_param:
+            return Response(
+                data=[],
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        nemos = list(map(lambda x: x.strip(), nemos_param.split(",")))
+        start_date = params.get("start_date")
+        end_date = params.get("end_date")
+        if not start_date or not end_date:
+            return Response(
+                data=[],
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        start_date = arrow.get(start_date)
+        end_date = arrow.get(end_date)
+        scrape = web_scraping_services.BolsaDeSantiagoWebScraping()
+
+        data = {}
+        for nemo in nemos:
+            data[nemo] = scrape.get_dividends(nemo=nemo, from_date=start_date, to_date=end_date)
+
+        # TODO: save data
+        return Response(
+            data=data,
             status=status.HTTP_200_OK,
         )
